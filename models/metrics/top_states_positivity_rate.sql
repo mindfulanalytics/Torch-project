@@ -1,16 +1,7 @@
 with states as (
 
-    select
-        date as collected_at,
-        state,
-        max(date) over() as max_collected_at,
-        max(date) over () - 30 as last30days_collected_at,
-        positive as positive_cases,
-        positiveIncrease as positive_cases_increase,
-        totalTestResults as total_tests,
-        totalTestResultsIncrease as total_tests_increase,
-    from Covid_Tracking_data.Covid_tracking_state_history
-
+    select *
+    from {{ ref('stg_covid_data' ) }}
 ),
 
 last30days_tests as (
@@ -43,7 +34,7 @@ last30days_tests as (
 
 select
     state,
-    rank() over(order by positivity_rate desc),
+    rank() over(order by positivity_rate desc) as state_rate_rank,
     positivity_rate
 from test_rate
 where positivity_rate is not null and positivity_rate between 0 and 99      -- filtered out dirty data states PR, MP, WY and AS, have to look into it

@@ -1,0 +1,46 @@
+version: 2
+
+models:
+  - name: stg_covid_data
+    description: Historical US state data from the COVID tracking project.
+    columns: 
+      - name: collected_at
+        description: The date when the data was collected
+        tests:
+          - not_null
+      - name: state
+        description: US state abbreviations
+        tests:
+          - not_null
+      - name: max_collected_at
+        description: The most recent collection date
+      - name: last30days_collected_at
+        description: Most recent collection date - 30 days
+      - name: positive_cases
+        description: Cumulative sum of positive cases
+      - name: positive_cases_increase
+        description: Increase in positive cases since last collection
+      - name: total_tests
+        description: Cumulative sum of covid tests
+      - name: total_tests_increase
+        description: Increase in covid tests since last collection
+
+  - name: stg_orders
+    description: Staged order data from our jaffle shop app.
+    columns: 
+      - name: order_id
+        description: Primary key for orders.
+        tests:
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+      - name: status
+        description: "{{ doc('order_status') }}"
+        tests:
+          - accepted_values:
+              values:
+                - completed
+                - shipped
+                - returned
+                - placed
+                - return_pending
