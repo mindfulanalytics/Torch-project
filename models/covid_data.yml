@@ -1,0 +1,63 @@
+version: 2
+
+models:
+  - name: stg_covid_data
+    description: Historical US state data from the COVID tracking project.
+    columns: 
+      - name: collected_at
+        description: The date when the data was collected
+        tests:
+          - not_null
+      - name: state
+        description: US state abbreviations
+        tests:
+          - not_null
+      - name: max_collected_at
+        description: The most recent collection date
+      - name: last30days_collected_at
+        description: Most recent collection date - 30 days
+      - name: positive_cases
+        description: Cumulative sum of positive cases
+      - name: positive_cases_increase
+        description: Increase in positive cases since last collection
+      - name: total_tests
+        description: Cumulative sum of covid tests
+      - name: total_tests_increase
+        description: Increase in covid tests since last collection
+  - name: 7day_rolling_avg
+    description: 7 day rolling average of new cases per day for last 30 days
+    columns: 
+      - name: collected_at
+        description: The date when the data was collected
+        tests:
+          - not_null
+      - name: seven_day_rolling_average
+        description: Average positive_cases_increase over the last 7 days for the respective collected_at date
+        tests:
+          - not_null
+  - name: top_states_positivity_rate
+    description: The 10 states with the highest test positivity rate for tests performed in the last 30 days
+    columns: 
+      - name: state
+        description: US state abbreviations
+        tests:
+          - not_null
+      - name: state_rate_rank
+        description: Positivity rate rank descending
+        tests:
+          - not_null
+      - name: positivity_rate
+        description: (positive cases / tests performed)
+        tests:
+          - not_null
+  - name: total_tests
+    description: The total number of tests performed as of yesterday in the United States
+    columns: 
+      - name: collected_at
+        description: The date when the data was collected
+        tests:
+          - not_null
+      - name: total_tests_as_of_yesterday_us
+        description: Total tests as of the latest collected_at date in the United States
+        tests:
+          - not_null
